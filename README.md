@@ -19,7 +19,7 @@ This UI-focused application does not include backend integration but simulates a
 ### 1. **Splash & Home Screen**
 - **Main Purpose**: Acts as the landing screen where users begin their shopping experience.
 - **Key UI Elements**:
-  - App logo and welcome banner
+  - App logo 
   - Grid view of guitars with images, names, and prices
   - Bottom navigation bar for accessing Home, Cart, and Profile
 
@@ -35,7 +35,6 @@ This UI-focused application does not include backend integration but simulates a
 ### 3. **Cart Screen**
 - **Main Purpose**: Displays the list of products the user has added to their cart.
 - **Key UI Elements**:
-  - List of products with quantity controls
   - Total price calculation
   - Checkout button
 
@@ -44,6 +43,12 @@ This UI-focused application does not include backend integration but simulates a
 - **Key UI Elements**:
   - Order summary
   - Static thank-you confirmation message
+
+### 5. **Profile Screen**
+- **Main Purpose**: Item deliveries to be receive.
+- **Key UI Elements**:
+  - List of Ordered items
+  - Received button
 
 ### Additional Features
 - Profile Screen- Where all deliveries can be seen and where the customer can notify the seller by clicking the received button
@@ -83,7 +88,7 @@ By targeting guitar enthusiasts, the app is uniquely tailored to a specific audi
 
 ## Challenges Faced & Solutions
 
-### 1. **State Management Without Backend**
+### 1. **Showing the add to cart items to the Cart Screen**
 - **Problem**: Managing cart state and product selections without persistent storage.
 - **Solution**: Implemented an in-memory cart system using `CartService` and `setState()` for state updates. Structured the app to ensure UI consistently reflects the current state.
 
