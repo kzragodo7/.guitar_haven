@@ -40,7 +40,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
         selectedItemColor: AppConstantsColor.darkBrown, // Selected icon color
         unselectedItemColor: AppConstantsColor.darkBrown.withOpacity(
           0.5,
-        ), // Unselected icon color
+        ), 
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
