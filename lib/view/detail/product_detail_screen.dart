@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guitar_haven/models/product_model.dart';
 import 'package:guitar_haven/utils/constants.dart';
+import 'package:guitar_haven/services/cart_service.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -42,6 +43,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
   }
 
+  void _addToCart() {
+    CartService().addToCart(
+      widget.product,
+      quantity,
+      selectedColor,
+      selectedSize,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${widget.product.name} added to cart!'),
+        backgroundColor: const Color.fromARGB(255, 252, 161, 133),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
@@ -51,14 +69,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         title: Text(product.name, style: AppTextStyles.subHeader),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: AppConstantsColor.primaryColor),
+        iconTheme: const IconThemeData(color: AppConstantsColor.darkBrown),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image carousel (simplified)
+            // Image carousel
             SizedBox(
               height: 250,
               child: PageView(
@@ -73,112 +91,102 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         .toList(),
               ),
             ),
-            SizedBox(height: 16),
-            Text(product.name, style: AppTextStyles.header),
-            SizedBox(height: 8),
+            const SizedBox(height: 16),
+            Text(product.name, style: AppTextStyles.subHeader),
+            const SizedBox(height: 8),
             Text(
               '\$${product.price.toStringAsFixed(2)}',
-              style: AppTextStyles.priceText,
-            ),
-            SizedBox(height: 12),
-            Text(
-              product.description,
-              style: TextStyle(
-                fontSize: 16,
-                color: AppConstantsColor.darkTextColor,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppConstantsColor.darkBrown,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 12),
+            Text(
+              product.description,
+              style: const TextStyle(
+                fontSize: 16,
+                color: AppConstantsColor.darkBrown,
+              ),
+            ),
+            const SizedBox(height: 20),
 
             // Color selector
             if (product.availableColors.isNotEmpty) ...[
               Text('Select Color', style: AppTextStyles.subHeader),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Wrap(
                 spacing: 10,
                 children:
                     product.availableColors.map((color) {
-                      final bool isSelected = selectedColor == color;
+                      final isSelected = selectedColor == color;
                       return ChoiceChip(
                         label: Text(color),
                         selected: isSelected,
-                        selectedColor: AppConstantsColor.accentColor,
-                        onSelected: (_) {
-                          setState(() {
-                            selectedColor = color;
-                          });
-                        },
+                        selectedColor: const Color.fromARGB(255, 243, 152, 124),
+                        onSelected:
+                            (_) => setState(() => selectedColor = color),
                       );
                     }).toList(),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
 
             // Size selector
             if (product.availableSizes.isNotEmpty) ...[
               Text('Select Size', style: AppTextStyles.subHeader),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Wrap(
                 spacing: 10,
                 children:
                     product.availableSizes.map((size) {
-                      final bool isSelected = selectedSize == size;
+                      final isSelected = selectedSize == size;
                       return ChoiceChip(
                         label: Text(size),
                         selected: isSelected,
-                        selectedColor: AppConstantsColor.accentColor,
-                        onSelected: (_) {
-                          setState(() {
-                            selectedSize = size;
-                          });
-                        },
+                        selectedColor: AppConstantsColor.lightBrown,
+                        onSelected: (_) => setState(() => selectedSize = size),
                       );
                     }).toList(),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
 
             // Quantity selector
             Text('Quantity', style: AppTextStyles.subHeader),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               children: [
                 IconButton(
                   onPressed: _decrementQuantity,
-                  icon: Icon(Icons.remove_circle_outline),
-                  color: AppConstantsColor.primaryColor,
+                  icon: const Icon(Icons.remove_circle_outline),
+                  color: AppConstantsColor.darkBrown,
                 ),
-                Text(quantity.toString(), style: TextStyle(fontSize: 18)),
+                Text(
+                  quantity.toString(),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 255, 218, 207),
+                  ),
+                ),
                 IconButton(
                   onPressed: _incrementQuantity,
-                  icon: Icon(Icons.add_circle_outline),
-                  color: AppConstantsColor.primaryColor,
+                  icon: const Icon(Icons.add_circle_outline),
+                  color: AppConstantsColor.darkBrown,
                 ),
               ],
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
-            // Add to Cart button
+            // Add to Cart Button
             SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppConstantsColor.primaryColor,
-                ),
-                onPressed: () {
-                  // For now just show a snackbar
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text('Added to cart!')));
-                },
-                child: Text(
-                  'Add to Cart',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: AppConstantsColor.accentColor,
-                  ),
-                ),
+                style: AppButtonStyle.primary,
+                onPressed: _addToCart,
+                child: const Text('Add to Cart'),
               ),
             ),
           ],

@@ -1,128 +1,65 @@
+// import the necessary files
 import 'package:flutter/material.dart';
+import 'package:guitar_haven/services/cart_service.dart';
 import 'package:guitar_haven/models/product_model.dart';
-import 'package:guitar_haven/utils/constants.dart';
+import '../checkout/checkout_screen.dart';
+import 'package:guitar_haven/utils/constants.dart'; // For colors and styles
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
   @override
-  _CartScreenState createState() => _CartScreenState();
-}
-
-// Mock cart items
-class CartItem {
-  final Product product;
-  int quantity;
-  CartItem({required this.product, this.quantity = 1});
+  State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  List<CartItem> cartItems = [];
+  final cartItems = CartService().cartItems;
 
-  @override
-  void initState() {
-    super.initState();
-    // Add some dummy items initially
-    cartItems.add(
-      CartItem(
-        product: Product(
-          id: 'g1',
-          name: 'Fender Stratocaster',
-          description: '',
-          price: 1200,
-          images: [],
-          availableColors: [],
-          availableSizes: [],
-        ),
-        quantity: 1,
-      ),
-    );
-  }
-
-  void _incrementQuantity(int index) {
-    setState(() {
-      cartItems[index].quantity++;
-    });
-  }
-
-  void _decrementQuantity(int index) {
-    if (cartItems[index].quantity > 1) {
-      setState(() {
-        cartItems[index].quantity--;
-      });
+  double getTotalPrice() {
+    double total = 0.0;
+    for (var item in cartItems) {
+      total += item.product.price * item.quantity;
     }
+    return total;
   }
 
-  void _removeItem(int index) {
+  void removeItem(int index) {
     setState(() {
-      cartItems.removeAt(index);
+      CartService().removeFromCart(index);
     });
   }
-
-  double get subtotal => cartItems.fold(
-    0,
-    (sum, item) => sum + item.product.price * item.quantity,
-  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Cart', style: AppTextStyles.subHeader),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: IconThemeData(color: AppConstantsColor.primaryColor),
+        title: const Text('Your Cart'),
+        backgroundColor: AppConstantsColor.darkBrown,
+        foregroundColor: Colors.white,
       ),
       body:
           cartItems.isEmpty
-              ? Center(
-                child: Text(
-                  'Your cart is empty.',
-                  style: TextStyle(fontSize: 18),
-                ),
-              )
+              ? const Center(child: Text('Your cart is empty.'))
               : Column(
                 children: [
                   Expanded(
                     child: ListView.builder(
                       itemCount: cartItems.length,
-                      itemBuilder: (ctx, index) {
+                      itemBuilder: (context, index) {
                         final item = cartItems[index];
                         return ListTile(
-                          leading:
-                              item.product.images.isNotEmpty
-                                  ? Image.network(
-                                    item.product.images.first,
-                                    width: 50,
-                                    fit: BoxFit.cover,
-                                  )
-                                  : Icon(Icons.music_note),
-                          title: Text(
-                            item.product.name,
-                            style: AppTextStyles.productTitle,
+                          leading: Image.network(
+                            item.product.images.first,
+                            width: 60,
+                            fit: BoxFit.cover,
                           ),
+                          title: Text(item.product.name),
                           subtitle: Text(
-                            '\$${item.product.price.toStringAsFixed(2)} x ${item.quantity}',
+                            '${item.quantity} × \$${item.product.price.toStringAsFixed(2)}',
                           ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.remove_circle_outline),
-                                onPressed: () => _decrementQuantity(index),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.add_circle_outline),
-                                onPressed: () => _incrementQuantity(index),
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete_outline,
-                                  color: Colors.red,
-                                ),
-                                onPressed: () => _removeItem(index),
-                              ),
-                            ],
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => removeItem(index),
                           ),
                         );
                       },
@@ -135,37 +72,36 @@ class _CartScreenState extends State<CartScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'Subtotal:',
+                            const Text(
+                              'Total:',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              '\$${subtotal.toStringAsFixed(2)}',
-                              style: TextStyle(fontSize: 18),
+                              '\$${getTotalPrice().toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 16),
                         SizedBox(
                           width: double.infinity,
-                          height: 50,
                           child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppConstantsColor.primaryColor,
-                            ),
+                            style: AppButtonStyle.primary,
                             onPressed: () {
-                              Navigator.pushNamed(context, '/checkout');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const CheckoutScreen(),
+                                ),
+                              );
                             },
-                            child: Text(
-                              'Proceed to Checkout',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                            ),
+                            child: const Text('Proceed to Checkout'),
                           ),
                         ),
                       ],

@@ -2,41 +2,49 @@ import 'package:flutter/material.dart';
 import 'home/home_screen.dart';
 import 'bag/cart_screen.dart';
 import 'profile/profile_screen.dart';
+import '../../utils/constants.dart';
 
-class AppNavigator extends StatefulWidget {
-  const AppNavigator({super.key});
+class NavigatorScreen extends StatefulWidget {
+  final int selectedIndex;
+
+  const NavigatorScreen({Key? key, this.selectedIndex = 0}) : super(key: key);
 
   @override
-  _AppNavigatorState createState() => _AppNavigatorState();
+  _NavigatorScreenState createState() => _NavigatorScreenState();
 }
 
-class _AppNavigatorState extends State<AppNavigator> {
-  int _selectedIndex = 0;
+class _NavigatorScreenState extends State<NavigatorScreen> {
+  late int _currentIndex;
 
-  static final List<Widget> _screens = <Widget>[
-    HomeScreen(),
-    CartScreen(),
-    ProfileScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.selectedIndex;
+  }
 
-  void _onItemTapped(int index) {
+  void _onTabTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      _currentIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _screens = [HomeScreen(), CartScreen(), ProfileScreen()];
+
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueAccent,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
+        currentIndex: _currentIndex,
+        onTap: _onTabTapped,
+        selectedItemColor: AppConstantsColor.darkBrown, // Selected icon color
+        unselectedItemColor: AppConstantsColor.darkBrown.withOpacity(
+          0.5,
+        ), // Unselected icon color
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
+            icon: Icon(Icons.shopping_cart),
             label: 'Cart',
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),

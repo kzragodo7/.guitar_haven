@@ -7,45 +7,43 @@ class OrderConfirmedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppConstantsColor.white,
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(32),
+          padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.check_circle_outline,
                 size: 100,
-                color: AppConstantsColor.accentColor,
+                color: AppConstantsColor.darkBrown,
               ),
-              SizedBox(height: 24),
-              Text(
+              const SizedBox(height: 24),
+              const Text(
                 'Thank you for your purchase!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppConstantsColor.primaryColor,
-                ),
+                style: AppTextStyles.subHeader,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 12),
-              Text(
+              const SizedBox(height: 12),
+              const Text(
                 'Your order has been placed successfully and is being processed.',
                 style: TextStyle(
                   fontSize: 16,
-                  color: AppConstantsColor.darkTextColor,
+                  color: AppConstantsColor.darkBrown,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppConstantsColor.primaryColor,
+              const SizedBox(height: 40),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  },
+                  style: AppButtonStyle.primary,
+                  child: const Text('Back to Home'),
                 ),
-                child: Text('Back to Home', style: TextStyle(fontSize: 16)),
               ),
             ],
           ),

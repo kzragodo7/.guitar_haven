@@ -19,8 +19,8 @@ class GuitarHavenApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: AppConstantsColor.lightBrown,
-          selectedItemColor: const Color.fromARGB(255, 151, 80, 58),
-          unselectedItemColor: const Color.fromARGB(255, 99, 63, 51),
+          selectedItemColor: const Color.fromARGB(255, 255, 172, 146),
+          unselectedItemColor: const Color.fromARGB(255, 255, 178, 152),
         ),
         textTheme: Theme.of(context).textTheme.apply(
           bodyColor: const Color.fromARGB(255, 179, 104, 82),
